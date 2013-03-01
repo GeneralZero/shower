@@ -1,0 +1,122 @@
+{
+  "name": "Shower Presentation Engine",
+  "author": {
+    "name": "Vadim Makeev",
+    "url": "http://pepelsbey.net/"
+  },
+  "company": {
+    "name": "Opera Software",
+    "url": "http://opera.com/"
+  },
+  "slides": [
+    {
+      "type": "main",
+      "title": "Shower Presentaion Engine",
+      "background": "/pictures/cover.jpg"
+    },
+    {
+      "type": "text",
+      "timer": 5,
+      "title": "Slide with timer",
+      "content": {"It will change right in 5 seconds"}
+    },
+    {
+      "type": "text",
+      "title": "Heading",
+      "content": {"In your slides text you can use [links](http://google.com) and various inline elements for _emotional_ and __strong__ emphasis or just for *italic* or **bold decoration**. `<code>` is used for inline code samples."}
+    },
+    {
+      "type": "text",
+      "title": "Two rows. >>Mighty heading",
+      "content": {"You can use two lines header but it would reduce space on a slide. The 'Ribbon' theme is designed for seven lines of code after one-line header by default."},
+      "footnote": "This paragraph could be used as a footnote"
+    },
+    {
+      "type": "text",
+      "title": "Various lists",
+      "content":{
+        "bullets": { 
+          "Simple list are marked with bullets.", 
+          "Ordered lists begin with a number.",
+          "You can even nest lists one inside another",
+          "numlist" : {
+            "Or mix their types.", 
+            "But do not go too far.", 
+            "Otherwise audience will be board."
+          },
+          "Look, seven rows exactly!"
+        }
+      }
+    },
+    {
+      "type" : "text",
+      "title" : "Serious Citation"
+      "content": {
+        "citation" : {
+          "quote": "You can wrap one or more paragraphs into citation, which will make text italic and add a nice quote on the left. Giving the citation source would make it even more serious.",
+          "author": "Vadim Makeev"
+        }
+      }
+    },
+    {
+      "type" : "text",
+      "title" : "When you have a lot of code"
+      "content": {
+        "code" : [
+          "<html lang='en'>",
+          "<head> /*<!--Comment-->*/",
+          "<title>Shower</title>",
+          "<meta charset='UTF-8'>",
+          "<link rel='stylesheet' href='s/screen.css>",
+          "<script src='j/jquery.js'></script>",
+          "</head>"
+        ]
+      }
+    },
+    {
+      "type" : "text",
+      "title" : "When you have a lot of code"
+      "content": {
+        "code" : ["<html lang='en'>"],
+        "Now you can add a note for each block",
+        "code" : ["<meta charset='UTF-8'>"],
+        "Now you can add a note for each block"
+      }
+    },
+    {
+      "type" : "title",
+      "title": "You can shout this way"
+    },
+    {
+      "type" : "text",
+      "title": "And place any picture",
+      "background" : "pictures/picture.jpg"
+    },
+    {
+      "type" : "innav",
+      "title" : "Inner Navagation"
+      "content" : {
+        "numlist" : {
+          "Lets you change objects one by one",
+          "For example, show list items",
+          "Or switch pictures",
+          "And much more",
+          "But it will work only once"
+        }
+      }
+    },
+    {
+      "type" : "text"
+      "title": "Shower Presentation Engine",
+      "content" : {
+        "Vadim Makeev, Opera Software >>",
+        "bullets": {  
+          "url" : "http://pepelsbey.net",
+          "mail" : "pepelsbey@gmail.com",
+        },
+        "Shower:",
+        "url" : "https://github.com/shower/shower"
+      }
+    }
+  ]
+}
