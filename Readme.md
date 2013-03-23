@@ -13,12 +13,11 @@ See more details on [using keyboard](https://github.com/shower/shower/wiki/Short
 
 ## Using Shower
 
-There are two ways of using Shower: you can get full template [ZIP 1.4 MB](http://shwr.me/template.zip) or just an engine [ZIP 650 KB](http://shwr.me/shower.zip). See more details for beginners and advanced techniques in [Quick Start](https://github.com/shower/shower/wiki/Quick-Start) instructions.
+There are two ways of using Shower: you can get full template [ZIP 1.7 MB](http://shwr.me/template.zip) or just an engine [ZIP 915 KB](http://shwr.me/shower.zip). See more details for beginners and advanced techniques in [Quick Start](https://github.com/shower/shower/wiki/Quick-Start) instructions.
 
 ## Printing to PDF
 
-You can print your presentation to PDF using Google Chrome “Print to PDF” option in print dialog, [wkhtmltopdf](http://code.google.com/p/wkhtmltopdf) or [Prince](http://princexml.com). Print styles should be supplied to a theme for proper results. Please see [print styles](https://github.com/shower/ribbon/blob/master/styles/print.scss) for the Ribbon theme as example.
-
+You can print your presentation to PDF using Google Chrome “Print to PDF” option in print dialog or [wkhtmltopdf](http://code.google.com/p/wkhtmltopdf) or [Prince](http://princexml.com).
 Example of Shower template printed by Prince: [PDF 435 KB](https://github.com/shower/template/blob/master/index.pdf?raw=true). See more detais on printing in [documentation](https://github.com/shower/shower/wiki/Print).
 
 ## Usage examples
