@@ -7,6 +7,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 	var shower = {},
 		url = window.location,
 		body = document.body,
+		jsonSource,
 		slides = [],
 		progress = [],
 		slideList = [],
@@ -28,28 +29,40 @@ window.shower = window.shower || (function(window, document, undefined) {
 	 * Init
 	 * @param {String} slideSelector
 	 * @param {String} progressBarSelector
+	 * @param {String} jsonSourceSelector
 	 * @returns {Object} shower
 	 */
-	shower.init = function(slideSelector, progressSelector) {
+	shower.init = function(slideSelector, progressSelector, jsonSourceSelector) {
 		slideSelector = slideSelector || '.slide';
 		progressSelector = progressSelector || 'div.progress div';
+		jsonSourceSelector = jsonSourceSelector || 'meta[name="showerJsonSource"]';
+
+		var jsonSourceElement = document.querySelector(jsonSourceSelector);
 
 		slides = document.querySelectorAll(slideSelector);
 		progress = document.querySelector(progressSelector);
+		jsonSource = jsonSourceElement ? jsonSourceElement.content : null;
 		slideList = [];
 
-		for (var i = 0; i < slides.length; i++) {
-			// Slide IDs are optional. In case of missing ID we set it to the
-			// slide number
-			if ( ! slides[i].id) {
-				slides[i].id = i + 1;
-			}
+		/*if (jsonSource)
+		{
+			//TODO
+		}
+		else*/
+		{
+			for (var i = 0; i < slides.length; i++) {
+				// Slide IDs are optional. In case of missing ID we set it to the
+				// slide number
+				if ( ! slides[i].id) {
+					slides[i].id = i + 1;
+				}
 
-			slideList.push({
-				id: slides[i].id,
-				hasInnerNavigation: null !== slides[i].querySelector('.next'),
-				hasTiming: (shower._getData(slides[i], 'timing') && shower._getData(slides[i], 'timing').indexOf(':') !== -1)
-			});
+				slideList.push({
+					id: slides[i].id,
+					hasInnerNavigation: null !== slides[i].querySelector('.next'),
+					hasTiming: (shower._getData(slides[i], 'timing') && shower._getData(slides[i], 'timing').indexOf(':') !== -1)
+				});
+			}
 		}
 		return shower;
 	};
