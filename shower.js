@@ -67,6 +67,12 @@ window.shower = window.shower || (function(window, document, undefined) {
 		return shower;
 	};
 
+	shower.generateSlides = function(jsonString)
+	{
+		//TODO
+		console.debug("Called with json string" + jsonString); 
+	}
+
 
 	/**
 	* Get slide scale value.
@@ -332,8 +338,8 @@ window.shower = window.shower || (function(window, document, undefined) {
 	*/
 	shower.enterListMode = function(callback) {
 		// Anyway: change body class (@TODO: refactoring)
-		body.classList.remove('full');
-		body.classList.add('list');
+		document.body.classList.remove('full');
+		document.body.classList.add('list');
 
 		shower.clearPresenterNotes();
 
@@ -614,7 +620,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 	// Event handlers
 
 	window.addEventListener('DOMContentLoaded', function() {
-		if (body.classList.contains('full') || shower.isSlideMode()) {
+		if (document.body.classList.contains('full') || shower.isSlideMode()) {
 			shower.go(shower.getCurrentSlideNumber());
 			shower.enterSlideMode();
 		}

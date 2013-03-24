@@ -1,0 +1,23 @@
+<html>
+	<head>
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+		<meta content="utf-8" http-equiv="encoding">
+		<style type="text/css">
+		html, body {
+ 		margin: 0;
+		padding: 0;
+    	background-color: #151515;
+		}
+		</style>
+		<script type="text/javascript" src="shower.js"> </script>
+		<script type="text/javascript">		
+		function blank(a) { if(a.value == a.defaultValue) a.value = ""; }
+		function unblank(a) { if(a.value == "") a.value = a.defaultValue; }
+		</script> 
+		<title>Shower</title>
+	</head>
+	<body>
+		<textarea id="json" cols="50" rows="15" onfocus="blank(this)" onblur="unblank(this)" >Enter your json code here</textarea><br>
+		<a href="javascript:void(0)" onclick="shower.generateSlides(document.getElementById('json').value);">Generate your Slides</a>
+	</body>
+</html>
