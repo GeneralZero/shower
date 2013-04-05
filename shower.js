@@ -15,12 +15,12 @@ window.shower = window.shower || (function(window, document, undefined) {
 		isHistoryApiSupported = !!(window.history && history.pushState);
 
 	/**
-	* Get value at named data store for the DOM element.
-	* @private
-	* @param {HTMLElement} element
-	* @param {String} name
-	* @returns {String}
-	*/
+	 * Get value at named data store for the DOM element.
+	 * @private
+	 * @param {HTMLElement} element
+	 * @param {String} name
+	 * @returns {String}
+	 */
 	shower._getData = function(element, name) {
 		return element.dataset ? element.dataset[name] : element.getAttribute('data-' + name);
 	};
@@ -32,7 +32,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 	 * @param {String} jsonSourceSelector
 	 * @returns {Object} shower
 	 */
-	shower.init = function(slideSelector, progressSelector, jsonSourceSelector) {
+	shower.init = function(slideSelector, progressSelector, jsonSourceSelector, jsonSlideshow) {
 		slideSelector = slideSelector || '.slide';
 		progressSelector = progressSelector || 'div.progress div';
 		jsonSourceSelector = jsonSourceSelector || 'meta[name="showerJsonSource"]';
@@ -45,34 +45,30 @@ window.shower = window.shower || (function(window, document, undefined) {
 		slideList = [];
 
 		//If we have JSON, parse it
-		if (jsonSource)
-		{
+		if (jsonSlideshow) {
+			//If direct JSON exists, then just use that instead of the JSON source
+			shower._parseJson(JSON.parse(jsonSlideshow));
+		}
+		else if (jsonSource) {
      		var xmlHttp;
-
-     		//IE7+, Firefox, Safari, Opera...
-     		if(window.XMLHttpRequest)
- 			{
+     		if(window.XMLHttpRequest) {
+ 				//IE7+, Firefox, Safari, Opera...
  				xmlHttp = new XMLHttpRequest();
  			}
- 			//IE6...
-     		else
- 			{
+     		else {
+ 				//IE6...
  				xmlHttp = new ActiveXObject("MSXML2.XMLHTTP");
  			}
 
      		//Execute request
-     		if(xmlHttp)
-     		{
-				xmlHttp.open("GET", jsonSource, false);
-				xmlHttp.send();
-				if (xmlHttp.status == 200 || xmlHttp.status == 0)
-				{
-					alert("Everything is fine");
-					//shower._parseJson(JSON.parse(xmlHttp.responseText));
-				}
+     		xmlHttp.open("GET", jsonSource, false);
+			xmlHttp.send();
+			if (xmlHttp.status == 200 || xmlHttp.status == 0) {
+				shower._parseJson(JSON.parse(xmlHttp.responseText));
 			}
 		}
 
+		//Parse the slides
 		for (var i = 0; i < slides.length; i++) {
 			// Slide IDs are optional. In case of missing ID we set it to the
 			// slide number
@@ -95,37 +91,38 @@ window.shower = window.shower || (function(window, document, undefined) {
 	* @returns {Object} shower
 	*/
 	shower._parseJson = function(json) {
-		// First we want to clear out any old junk that may exist
-		var it = document.body.lastChild;
-		while (it && it.previousSibling) {
-			var node = it;
-			it = it.previousSibling;
+		if(json) {
+			// First we want to clear out any old junk that may exist
+			var it = document.body.lastChild;
+			while (it && it.previousSibling) {
+				var node = it;
+				it = it.previousSibling;
 
-			// Make sure to skip the script that loads this file
-			if (node.nodeName == "SCRIPT") {
-				var src = node.src;
-				if (src && (src.lastIndexOf("shower.js") > 0 || src.lastIndexOf("shower.min.js") > 0)) { //XXX Could probably use some regex
-					continue;
+				// Make sure to skip the script that loads this file
+				if (node.nodeName == "SCRIPT") {
+					var src = node.src;
+					if (src && (src.lastIndexOf("shower.js") > 0 || src.lastIndexOf("shower.min.js") > 0)) { //XXX Could probably use some regex...
+						continue;
+					}
+				}
+
+				//Remove the child
+			    document.body.removeChild(node);
+			}
+
+			//Next, set the title (if it exists)
+			var list;
+			list = document.head.childNodes;
+			for (var i = 0; i < list.length; i++) {
+				if(list[i].nodeName == "TITLE") {
+					list[i].text = json.name || "DEFAULT: Shower Presentation";
+					break;
 				}
 			}
 
-			//Remove the child
-		    document.body.removeChild(node);
+			//Now we can start parsing through slides
+			//TODO
 		}
-
-		//Next, set the title (if it exists)
-		var list = document.head.childNodes;
-		for (var i = 0; i < list.length; i++)
-		{
-			if(list[i].nodeName == "TITLE")
-			{
-				list[i].text = json.name;
-				break;
-			}
-		}
-
-		//Now we can start parsing through slides
-		//TODO
 		return shower;
 	};
 

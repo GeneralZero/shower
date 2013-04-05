@@ -67,7 +67,7 @@
           "<head> /*<!--Comment-->*/",
           "<title>Shower</title>",
           "<meta charset='UTF-8'>",
-          "<link rel='stylesheet' href='s/screen.css>",
+          "<link rel='stylesheet' href='s/screen.css'>",
           "<script src='j/jquery.js'></script>",
           "</head>"
         ]
