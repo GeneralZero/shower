@@ -44,29 +44,90 @@ window.shower = window.shower || (function(window, document, undefined) {
 		jsonSource = jsonSourceElement ? jsonSourceElement.content : null;
 		slideList = [];
 
-		/*if (jsonSource)
+		//If we have JSON, parse it
+		if (jsonSource)
 		{
-			//TODO
-		}
-		else*/
-		{
-			for (var i = 0; i < slides.length; i++) {
-				// Slide IDs are optional. In case of missing ID we set it to the
-				// slide number
-				if ( ! slides[i].id) {
-					slides[i].id = i + 1;
-				}
+     		var xmlHttp;
 
-				slideList.push({
-					id: slides[i].id,
-					hasInnerNavigation: null !== slides[i].querySelector('.next'),
-					hasTiming: (shower._getData(slides[i], 'timing') && shower._getData(slides[i], 'timing').indexOf(':') !== -1)
-				});
+     		//IE7+, Firefox, Safari, Opera...
+     		if(window.XMLHttpRequest)
+ 			{
+ 				xmlHttp = new XMLHttpRequest();
+ 			}
+ 			//IE6...
+     		else
+ 			{
+ 				xmlHttp = new ActiveXObject("MSXML2.XMLHTTP");
+ 			}
+
+     		//Execute request
+     		if(xmlHttp)
+     		{
+				xmlHttp.open("GET", jsonSource, false);
+				xmlHttp.send();
+				if (xmlHttp.status == 200 || xmlHttp.status == 0)
+				{
+					alert("Everything is fine");
+					//shower._parseJson(JSON.parse(xmlHttp.responseText));
+				}
 			}
+		}
+
+		for (var i = 0; i < slides.length; i++) {
+			// Slide IDs are optional. In case of missing ID we set it to the
+			// slide number
+			if ( ! slides[i].id) {
+				slides[i].id = i + 1;
+			}
+
+			slideList.push({
+				id: slides[i].id,
+				hasInnerNavigation: null !== slides[i].querySelector('.next'),
+				hasTiming: (shower._getData(slides[i], 'timing') && shower._getData(slides[i], 'timing').indexOf(':') !== -1)
+			});
 		}
 		return shower;
 	};
 
+	/**
+	* Parse JSON into a DOM representation
+	* @private
+	* @returns {Object} shower
+	*/
+	shower._parseJson = function(json) {
+		// First we want to clear out any old junk that may exist
+		var it = document.body.lastChild;
+		while (it && it.previousSibling) {
+			var node = it;
+			it = it.previousSibling;
+
+			// Make sure to skip the script that loads this file
+			if (node.nodeName == "SCRIPT") {
+				var src = node.src;
+				if (src && (src.lastIndexOf("shower.js") > 0 || src.lastIndexOf("shower.min.js") > 0)) { //XXX Could probably use some regex
+					continue;
+				}
+			}
+
+			//Remove the child
+		    document.body.removeChild(node);
+		}
+
+		//Next, set the title (if it exists)
+		var list = document.head.childNodes;
+		for (var i = 0; i < list.length; i++)
+		{
+			if(list[i].nodeName == "TITLE")
+			{
+				list[i].text = json.name;
+				break;
+			}
+		}
+
+		//Now we can start parsing through slides
+		//TODO
+		return shower;
+	};
 
 	/**
 	* Get slide scale value.
