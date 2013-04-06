@@ -63,7 +63,7 @@ window.shower = window.shower || (function(window, document, undefined) {
      		//Execute request
      		xmlHttp.open("GET", jsonSource, false);
 			xmlHttp.send();
-			if (xmlHttp.status == 200 || xmlHttp.status == 0) {
+			if (xmlHttp.status === 200 || xmlHttp.status === 0) {
 				shower._parseJson(JSON.parse(xmlHttp.responseText));
 			}
 		}
@@ -87,6 +87,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 
 	/**
 	* Parse JSON into a DOM representation
+	* @param {JSON} The JSON to parse into slides.
 	* @private
 	* @returns {Object} shower
 	*/
@@ -111,19 +112,145 @@ window.shower = window.shower || (function(window, document, undefined) {
 			}
 
 			//Next, set the title (if it exists)
-			var list;
-			list = document.head.childNodes;
+			var title = json.name || "DEFAULT: Shower Presentation";
+			var list = document.head.childNodes;
 			for (var i = 0; i < list.length; i++) {
 				if(list[i].nodeName == "TITLE") {
-					list[i].text = json.name || "DEFAULT: Shower Presentation";
+					list[i].text = title;
 					break;
 				}
 			}
 
+			//Make sure the required elements exist
+			if(!body) {
+				body = document.createElement("BODY");
+				document.documentElement.appendChild(body);
+			}
+
+			//Generate the header
+			var ele = document.createElement("HEADER");
+			var ele2 = document.createElement("H1");
+			var txt = document.createTextNode(title);
+			ele2.appendChild(txt);
+			ele.appendChild(ele2);
+			body.appendChild(ele);
+			if(json.author || json.company) {
+				ele2 = document.createElement("P");
+				ele.appendChild(ele2);
+
+				var ele3;
+				var att;
+				var part
+				if(json.author) {
+					ele3 = document.createElement("A");
+					ele2.appendChild(ele3);
+					for(part in json.author) {
+						if(part == "name") {
+							txt = document.createTextNode(json.author[part]);
+							ele3.appendChild(txt);
+						}
+						else if(part == "url") {
+							att = document.createAttribute("href");
+							att.value = json.author[part];
+							ele3.setAttributeNode(att);
+						}
+					}
+				}
+				if(json.company) {
+					ele3 = document.createElement("A");
+					ele2.appendChild(ele3);
+					for(part in json.company) {
+						if(part == "name") {
+							txt = document.createTextNode(json.company[part]);
+							ele3.appendChild(txt);
+						}
+						else if(part == "url") {
+							att = document.createAttribute("href");
+							att.value = json.company[part];
+							ele3.setAttributeNode(att);
+						}
+					}
+				}
+			}
+
 			//Now we can start parsing through slides
-			//TODO
+			if(json.slides) {
+				for(var slideIndex in json.slides) {
+					var slide = json.slides[slideIndex];
+					if(slide.type == "main" || slide.type == "text" || slide.type == "title" || slide.type == "innav") {
+						var d = shower._parseJsonToSlide(slide);
+						if(d) {
+							body.appendChild(d);
+						}
+					}
+					else if(window.console) {
+						window.console.log("Unknown slide type '" + slide.type + "'");
+					}
+				}
+			}
 		}
 		return shower;
+	};
+
+	/**
+	* Parse a JSON slide into a DOM representation
+	* @param {JSON} The individual slide to convert to DOM.
+	* @private
+	* @returns {Object} DOM
+	*/
+	shower._parseJsonToSlide = function(slideJson) {
+		var retSlide = null;
+		if(slideJson && slideJson.type) {
+			var att;
+			var txt;
+			var ele = document.createElement("SECTION");
+			var ele2 = document.createElement("DIV");
+			retSlide = ele;
+			ele.appendChild(ele2);
+
+			att = document.createAttribute("class");
+			att.value = "slide";
+			if(slideJson.domClass) {
+				//If a custom class exists, use it instead of basing it off type
+				att.value += " ";
+				att.value += slideJson.domClass;
+			}
+			else if(slideJson.type == "main" || slideJson.background) { //Background seems to be the decision maker for if a slide is "cover"
+				att.value += " cover";
+			}
+			else if(slideJson.type == "title") {
+				att.value += " shout";
+			}
+			ele.setAttributeNode(att);
+
+			if(slideJson.id) {
+				att = document.createAttribute("id");
+				att.value = coverSlide.id;
+				ele.setAttributeNode(att);
+			}
+
+			ele = ele2;
+			ele2 = document.createElement("H2");
+			txt = document.createTextNode(slideJson.title || "");
+			ele.appendChild(ele2);
+			ele2.appendChild(txt);
+
+			if(slideJson.background) {
+				ele2 = document.createElement("IMG");
+				ele.appendChild(ele2);
+
+				att = document.createAttribute("src");
+				att.value = slideJson.background;
+				ele2.setAttributeNode(att);
+
+				att = document.createAttribute("alt");
+				att.value = slideJson.backgroundAlt || "";
+				ele2.setAttributeNode(att);
+			}
+
+			//TODO
+		}
+		return retSlide;
 	};
 
 	/**
@@ -494,7 +621,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 	* @returns {Boolean}
 	*/
 	shower.isListMode = function() {
-		return isHistoryApiSupported ? ! /^full.*/.test(url.search.substr(1)) : body.classList.contains('list');
+		return isHistoryApiSupported ? ! (/^full.*/).test(url.search.substr(1)) : body.classList.contains('list');
 	};
 
 	/**
@@ -502,7 +629,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 	* @returns {Boolean}
 	*/
 	shower.isSlideMode = function() {
-		return isHistoryApiSupported ? /^full.*/.test(url.search.substr(1)) : body.classList.contains('full');
+		return isHistoryApiSupported ? (/^full.*/).test(url.search.substr(1)) : body.classList.contains('full');
 	};
 
 	/**
@@ -768,6 +895,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 
 			default:
 				// Behave as usual
+			break;
 		}
 	}, false);
 
