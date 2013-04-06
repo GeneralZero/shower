@@ -2,17 +2,17 @@
     "name": "Shower Presentation Engine",
     "slideshow": {
         "header": {
-            "domClass": "caption"
+            "domClass": "caption",
+            "author": {
+                "name": "Vadim Makeev",
+                "url": "http://pepelsbey.net/"
+            },
+            "company": {
+                "name": "Opera Software",
+                "url": "http://opera.com/"
+            }
         },
         "progressBar": true
-    },
-    "author": {
-        "name": "Vadim Makeev",
-        "url": "http://pepelsbey.net/"
-    },
-    "company": {
-        "name": "Opera Software",
-        "url": "http://opera.com/"
     },
     "slides": [
         {
