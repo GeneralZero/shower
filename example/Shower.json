@@ -1,5 +1,8 @@
 {
     "name": "Shower Presentation Engine",
+    "header": {
+        "domClass": "caption"
+    },
     "author": {
         "name": "Vadim Makeev",
         "url": "http://pepelsbey.net/"
@@ -13,7 +16,7 @@
             "type": "main",
             "id": "Cover",
             "title": "Shower Presentaion Engine",
-            "background": "/pictures/cover.jpg"
+            "background": "pictures/cover.jpg"
         },
         {
             "type": "text",

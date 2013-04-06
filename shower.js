@@ -128,18 +128,25 @@ window.shower = window.shower || (function(window, document, undefined) {
 			}
 
 			//Generate the header
+			var att;
 			var ele = document.createElement("HEADER");
 			var ele2 = document.createElement("H1");
 			var txt = document.createTextNode(title);
 			ele2.appendChild(txt);
 			ele.appendChild(ele2);
 			body.appendChild(ele);
+			if(json.header) {
+				if(json.header.domClass) {
+					att = document.createAttribute("class");
+					att.value = json.header.domClass;
+					ele.setAttributeNode(att);
+				}
+			}
 			if(json.author || json.company) {
 				ele2 = document.createElement("P");
 				ele.appendChild(ele2);
 
 				var ele3;
-				var att;
 				var part
 				if(json.author) {
 					ele3 = document.createElement("A");
@@ -155,6 +162,10 @@ window.shower = window.shower || (function(window, document, undefined) {
 							ele3.setAttributeNode(att);
 						}
 					}
+				}
+				if(json.author && json.company) {
+					txt = document.createTextNode(", ");
+					ele2.appendChild(txt);
 				}
 				if(json.company) {
 					ele3 = document.createElement("A");
@@ -225,7 +236,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 
 			if(slideJson.id) {
 				att = document.createAttribute("id");
-				att.value = coverSlide.id;
+				att.value = slideJson.id;
 				ele.setAttributeNode(att);
 			}
 
