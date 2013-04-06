@@ -131,54 +131,56 @@ window.shower = window.shower || (function(window, document, undefined) {
 
 			//Generate the header
 			var att;
-			var ele = document.createElement("HEADER");
-			var ele2 = document.createElement("H1");
-			var txt = document.createTextNode(title);
-			ele2.appendChild(txt);
-			ele.appendChild(ele2);
-			body.appendChild(ele);
-			if(json.slideshow && json.slideshow.header && json.slideshow.header.domClass) {
-				att = document.createAttribute("class");
-				att.value = json.slideshow.header.domClass;
-				ele.setAttributeNode(att);
-			}
-			if(json.author || json.company) {
-				ele2 = document.createElement("P");
+			var ele;
+			var ele2;
+			if(json.slideshow && json.slideshow.header) {
+				var header = json.slideshow.header;
+				ele = document.createElement("HEADER");
+				ele2 = document.createElement("H1");
+				shower._processJsonMarkdown(ele2, title);
 				ele.appendChild(ele2);
+				body.appendChild(ele);
+				if(header.domClass) {
+					att = document.createAttribute("class");
+					att.value = header.domClass;
+					ele.setAttributeNode(att);
+				}
+				if(header.author || header.company) {
+					ele2 = document.createElement("P");
+					ele.appendChild(ele2);
 
-				var ele3;
-				var part
-				if(json.author) {
-					ele3 = document.createElement("A");
-					ele2.appendChild(ele3);
-					for(part in json.author) {
-						if(part == "name") {
-							txt = document.createTextNode(json.author[part]);
-							ele3.appendChild(txt);
-						}
-						else if(part == "url") {
-							att = document.createAttribute("href");
-							att.value = json.author[part];
-							ele3.setAttributeNode(att);
+					var ele3;
+					var part
+					if(header.author) {
+						ele3 = document.createElement("A");
+						ele2.appendChild(ele3);
+						for(part in header.author) {
+							if(part == "name") {
+								shower._processJsonMarkdown(ele3, header.author[part]);
+							}
+							else if(part == "url") {
+								att = document.createAttribute("href");
+								att.value = header.author[part];
+								ele3.setAttributeNode(att);
+							}
 						}
 					}
-				}
-				if(json.author && json.company) {
-					txt = document.createTextNode(", ");
-					ele2.appendChild(txt);
-				}
-				if(json.company) {
-					ele3 = document.createElement("A");
-					ele2.appendChild(ele3);
-					for(part in json.company) {
-						if(part == "name") {
-							txt = document.createTextNode(json.company[part]);
-							ele3.appendChild(txt);
-						}
-						else if(part == "url") {
-							att = document.createAttribute("href");
-							att.value = json.company[part];
-							ele3.setAttributeNode(att);
+					if(header.author && header.company) {
+						var txt = document.createTextNode(", ");
+						ele2.appendChild(txt);
+					}
+					if(header.company) {
+						ele3 = document.createElement("A");
+						ele2.appendChild(ele3);
+						for(part in header.company) {
+							if(part == "name") {
+								shower._processJsonMarkdown(ele3, header.company[part]);
+							}
+							else if(part == "url") {
+								att = document.createAttribute("href");
+								att.value = header.company[part];
+								ele3.setAttributeNode(att);
+							}
 						}
 					}
 				}
@@ -269,9 +271,8 @@ window.shower = window.shower || (function(window, document, undefined) {
 
 			ele = ele2;
 			ele2 = document.createElement("H2");
-			txt = document.createTextNode(slideJson.title || "");
+			shower._processJsonMarkdown(ele2, slideJson.title || "");
 			ele.appendChild(ele2);
-			ele2.appendChild(txt);
 
 			if(slideJson.background) {
 				ele2 = document.createElement("IMG");
@@ -290,6 +291,27 @@ window.shower = window.shower || (function(window, document, undefined) {
 		}
 		return retSlide;
 	};
+
+	/**
+	 * Process text that is formatted with Markdown
+	 * @param {Node} The node to hold the text, otherwise one will be made.
+	 * @param {String} The text to process.
+	 * @private
+	 * @returns {Node} the same node that was passed in, or if the param was null, a <a> node
+	 */
+	shower._processJsonMarkdown = function(outerElement, text) {
+		var ret;
+		if(!outerElement || outerElement.nodeType > 1) { //Null or not something we can add children to
+			ret = document.createElement("A");
+		}
+		else { //A Node or Element
+			ret = outerElement;
+		}
+		//TODO
+		var t = document.createTextNode(text);
+		ret.appendChild(t);
+		return ret;
+	}
 
 	/**
 	* Get slide scale value.

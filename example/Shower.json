@@ -1,7 +1,7 @@
 {
     "name": "Shower Presentation Engine",
     "slideshow": {
-        "header" : {
+        "header": {
             "domClass": "caption"
         },
         "progressBar": true
@@ -27,7 +27,8 @@
             "title": "Slide with timer",
             "content": [
                 "It will change right in 5 seconds"
-            ]
+            ],
+            "footer": "Presenter note for the first slide"
         },
         {
             "type": "text",
@@ -38,7 +39,7 @@
         },
         {
             "type": "text",
-            "title": "Two rows. >>Mighty heading",
+            "title": "Two rows.>> Mighty heading",
             "content": [
                 "You can use two lines header but it would reduce space on a slide. The 'Ribbon' theme is designed for seven lines of code after one-line header by default."
             ],
@@ -50,12 +51,17 @@
             "content": [
                 {
                     "bullets": [
-                        "Look, seven rows exactly!",
+                        "Simple lists are marked with bullets.",
+                        "Ordered lists begin with a number.",
+                        "You can even nest lists one inside another.",
                         {
                             "numlist": [
+                                "Or mix their types.",
+                                "But do not go too far.",
                                 "Otherwise audience will be board."
                             ]
-                        }
+                        },
+                        "Look, seven rows exactly!"
                     ]
                 }
             ]
@@ -91,19 +97,25 @@
         },
         {
             "type": "text",
-            "title": "When you have a lot of code",
+            "title": "Code in separate blocks",
             "content": [
+                {
+                    "code": [
+                        "<html lang='en'>"
+                    ]
+                },
+                "Now you can add a note for each block",
                 {
                     "code": [
                         "<meta charset='UTF-8'>"
                     ]
                 },
-                "Now you can add a note for each block"
+                "And explain what is interesting about it"
             ]
         },
         {
             "type": "title",
-            "title": "You can shout this way"
+            "title": "You can shout>> this way"
         },
         {
             "type": "text",
@@ -117,6 +129,10 @@
             "content": [
                 {
                     "numlist": [
+                        "Lets you change objects one by one",
+                        "For example, show list items",
+                        "Or switch pictures",
+                        "And much more",
                         "But it will work only once"
                     ]
                 }
@@ -126,16 +142,14 @@
             "type": "text",
             "title": "Shower Presentation Engine",
             "content": [
-                "Shower:",
                 {
-                    "bullets": {
-                        "url": "http://pepelsbey.net",
-                        "mail": "pepelsbey@gmail.com"
-                    }
+                    "bullets": [
+                        "[pepelsbey.net](http://pepelsbey.net)",
+                        "[twitter.com/pepelsbey](http://twitter.com/pepelsbey)",
+                        "[pepelsbey@gmail.com](mailto:pepelsbey@gmail.com)"
+                    ]
                 },
-                {
-                    "url": "https://github.com/shower/shower"
-                }
+                "Shower: [github.com/shower/shower](https://github.com/shower/shower)"
             ]
         }
     ]
