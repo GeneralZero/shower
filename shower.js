@@ -37,12 +37,9 @@ window.shower = window.shower || (function(window, document, undefined) {
 		progressSelector = progressSelector || 'div.progress div';
 		jsonSourceSelector = jsonSourceSelector || 'meta[name="showerJsonSource"]';
 
+		//Check for JSON
 		var jsonSourceElement = document.querySelector(jsonSourceSelector);
-
-		slides = document.querySelectorAll(slideSelector);
-		progress = document.querySelector(progressSelector);
 		jsonSource = jsonSourceElement ? jsonSourceElement.content : null;
-		slideList = [];
 
 		//If we have JSON, parse it
 		if (jsonSlideshow) {
@@ -63,10 +60,15 @@ window.shower = window.shower || (function(window, document, undefined) {
      		//Execute request
      		xmlHttp.open("GET", jsonSource, false);
 			xmlHttp.send();
-			if (xmlHttp.status === 200 || xmlHttp.status === 0) {
+			if (xmlHttp.status === 200) {
 				shower._parseJson(JSON.parse(xmlHttp.responseText));
 			}
 		}
+
+		//Now look for the slides
+		slides = document.querySelectorAll(slideSelector);
+		progress = document.querySelector(progressSelector);
+		slideList = [];
 
 		//Parse the slides
 		for (var i = 0; i < slides.length; i++) {
@@ -135,12 +137,10 @@ window.shower = window.shower || (function(window, document, undefined) {
 			ele2.appendChild(txt);
 			ele.appendChild(ele2);
 			body.appendChild(ele);
-			if(json.header) {
-				if(json.header.domClass) {
-					att = document.createAttribute("class");
-					att.value = json.header.domClass;
-					ele.setAttributeNode(att);
-				}
+			if(json.slideshow && json.slideshow.header && json.slideshow.header.domClass) {
+				att = document.createAttribute("class");
+				att.value = json.slideshow.header.domClass;
+				ele.setAttributeNode(att);
 			}
 			if(json.author || json.company) {
 				ele2 = document.createElement("P");
@@ -199,6 +199,18 @@ window.shower = window.shower || (function(window, document, undefined) {
 					}
 				}
 			}
+
+			//Last, we need progress
+			if(json.slideshow && json.slideshow.progressBar) {
+				ele = document.createElement("DIV");
+				ele2 = document.createElement("DIV");
+				ele.appendChild(ele2);
+				body.appendChild(ele);
+
+				att = document.createAttribute("class");
+				att.value = json.slideshow.progressBarClass || "progress";
+				ele.setAttributeNode(att);
+			}
 		}
 		return shower;
 	};
@@ -237,6 +249,21 @@ window.shower = window.shower || (function(window, document, undefined) {
 			if(slideJson.id) {
 				att = document.createAttribute("id");
 				att.value = slideJson.id;
+				ele.setAttributeNode(att);
+			}
+
+			if(slideJson.timer) {
+				att = document.createAttribute("data-timing");
+				var time = Number(slideJson.timer).valueOf();
+				var timeStr = "";
+				if((time / 60) < 10) {
+					timeStr += "0";
+				}
+				timeStr += (time / 60).toFixed() + ":";
+				if((time % 60) < 10) {
+					timeStr += "0";
+				}
+				att.value = timeStr + (time % 60).toFixed();
 				ele.setAttributeNode(att);
 			}
 

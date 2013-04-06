@@ -1,7 +1,10 @@
 {
     "name": "Shower Presentation Engine",
-    "header": {
-        "domClass": "caption"
+    "slideshow": {
+        "header" : {
+            "domClass": "caption"
+        },
+        "progressBar": true
     },
     "author": {
         "name": "Vadim Makeev",
@@ -15,7 +18,7 @@
         {
             "type": "main",
             "id": "Cover",
-            "title": "Shower Presentaion Engine",
+            "title": "Shower Presentation Engine",
             "background": "pictures/cover.jpg"
         },
         {
@@ -104,6 +107,7 @@
         },
         {
             "type": "text",
+            "id": "Picture",
             "title": "And place any picture",
             "background": "pictures/picture.jpg"
         },
