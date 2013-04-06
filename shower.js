@@ -30,6 +30,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 	 * @param {String} slideSelector
 	 * @param {String} progressBarSelector
 	 * @param {String} jsonSourceSelector
+	 * @param {String} jsonSlideshow
 	 * @returns {Object} shower
 	 */
 	shower.init = function(slideSelector, progressSelector, jsonSourceSelector, jsonSlideshow) {
@@ -89,28 +90,45 @@ window.shower = window.shower || (function(window, document, undefined) {
 
 	/**
 	* Parse JSON into a DOM representation
-	* @param {JSON} The JSON to parse into slides.
+	* @param {JSON} json
 	* @private
 	* @returns {Object} shower
 	*/
 	shower._parseJson = function(json) {
 		if(json) {
+			//Make sure the required elements exist
+			if(!body) {
+				body = document.createElement("BODY");
+				document.documentElement.appendChild(body);
+			}
+
 			// First we want to clear out any old junk that may exist
-			var it = document.body.lastChild;
+			var it = body.lastChild;
 			while (it && it.previousSibling) {
 				var node = it;
 				it = it.previousSibling;
 
 				// Make sure to skip the script that loads this file
-				if (node.nodeName == "SCRIPT") {
+				if(node.nodeName == "SCRIPT") {
 					var src = node.src;
 					if (src && (src.lastIndexOf("shower.js") > 0 || src.lastIndexOf("shower.min.js") > 0)) { //XXX Could probably use some regex...
 						continue;
 					}
 				}
+				else if (node.hasAttributes() && node.getAttribute("dontremove") == "true") {
+					continue;
+				}
 
 				//Remove the child
-			    document.body.removeChild(node);
+			    body.removeChild(node);
+			}
+
+			//Make sure we retain some element ordering
+			var addBefore = body.firstChild;
+			if(!addBefore) {
+				//Need at least one node
+				addBefore = document.createElement("A");
+				body.appendChild(addBefore);
 			}
 
 			//Next, set the title (if it exists)
@@ -123,12 +141,6 @@ window.shower = window.shower || (function(window, document, undefined) {
 				}
 			}
 
-			//Make sure the required elements exist
-			if(!body) {
-				body = document.createElement("BODY");
-				document.documentElement.appendChild(body);
-			}
-
 			//Generate the header
 			var att;
 			var ele;
@@ -139,7 +151,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 				ele2 = document.createElement("H1");
 				shower._processJsonMarkdown(ele2, title);
 				ele.appendChild(ele2);
-				body.appendChild(ele);
+				body.insertBefore(ele, addBefore);
 				if(header.domClass) {
 					att = document.createAttribute("class");
 					att.value = header.domClass;
@@ -150,7 +162,8 @@ window.shower = window.shower || (function(window, document, undefined) {
 					ele.appendChild(ele2);
 
 					var ele3;
-					var part
+					var part;
+					//XXX Can probably replace a good chunk of this with markdown...
 					if(header.author) {
 						ele3 = document.createElement("A");
 						ele2.appendChild(ele3);
@@ -193,11 +206,11 @@ window.shower = window.shower || (function(window, document, undefined) {
 					if(slide.type == "main" || slide.type == "text" || slide.type == "title" || slide.type == "innav") {
 						var d = shower._parseJsonToSlide(slide);
 						if(d) {
-							body.appendChild(d);
+							body.insertBefore(d, addBefore);
 						}
 					}
 					else if(window.console) {
-						window.console.log("Unknown slide type '" + slide.type + "'");
+						window.console.log("Unknown slide type: " + slide.type);
 					}
 				}
 			}
@@ -207,7 +220,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 				ele = document.createElement("DIV");
 				ele2 = document.createElement("DIV");
 				ele.appendChild(ele2);
-				body.appendChild(ele);
+				body.insertBefore(ele, addBefore);
 
 				att = document.createAttribute("class");
 				att.value = json.slideshow.progressBarClass || "progress";
@@ -219,7 +232,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 
 	/**
 	* Parse a JSON slide into a DOM representation
-	* @param {JSON} The individual slide to convert to DOM.
+	* @param {JSON} slideJson
 	* @private
 	* @returns {Object} DOM
 	*/
@@ -287,17 +300,37 @@ window.shower = window.shower || (function(window, document, undefined) {
 				ele2.setAttributeNode(att);
 			}
 
-			//TODO
+			if(slideJson.content) {
+				//TODO
+			}
+
+			if(slideJson.footnote) {
+				ele2 = document.createElement("P");
+				ele.appendChild(ele2);
+
+				att = document.createAttribute("class");
+				att.value = "note";
+				ele2.setAttributeNode(att);
+
+				shower._processJsonMarkdown(ele2, slideJson.footnote);
+			}
+
+			if(slideJson.footer) {
+				ele2 = document.createElement("FOOTER");
+				txt = document.createTextNode(slideJson.footer);
+				ele2.appendChild(txt);
+				ele.appendChild(ele2);
+			}
 		}
 		return retSlide;
 	};
 
 	/**
 	 * Process text that is formatted with Markdown
-	 * @param {Node} The node to hold the text, otherwise one will be made.
-	 * @param {String} The text to process.
+	 * @param {Node} outerElement
+	 * @param {String} text
 	 * @private
-	 * @returns {Node} the same node that was passed in, or if the param was null, a <a> node
+	 * @returns {Node} the same outer element that was passed in, or if the param was null, a <a> node
 	 */
 	shower._processJsonMarkdown = function(outerElement, text) {
 		var ret;
@@ -311,7 +344,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 		var t = document.createTextNode(text);
 		ret.appendChild(t);
 		return ret;
-	}
+	};
 
 	/**
 	* Get slide scale value.

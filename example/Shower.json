@@ -35,7 +35,8 @@
             "title": "Heading",
             "content": [
                 "In your slides text you can use [links](http://google.com) and various inline elements for _emotional_ and __strong__ emphasis or just for *italic* or **bold decoration**. `<code>` is used for inline code samples."
-            ]
+            ],
+            "footer": "Presenter note for the second slide"
         },
         {
             "type": "text",
