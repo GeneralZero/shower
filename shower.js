@@ -55,11 +55,11 @@ window.shower = window.shower || (function(window, document, undefined) {
  			}
      		else {
  				//IE6...
- 				xmlHttp = new ActiveXObject("MSXML2.XMLHTTP");
+ 				xmlHttp = new ActiveXObject('MSXML2.XMLHTTP');
  			}
 
      		//Execute request
-     		xmlHttp.open("GET", jsonSource, false);
+     		xmlHttp.open('GET', jsonSource, false);
 			xmlHttp.send();
 			if (xmlHttp.status === 200) {
 				shower._parseJson(JSON.parse(xmlHttp.responseText));
@@ -96,9 +96,26 @@ window.shower = window.shower || (function(window, document, undefined) {
 	*/
 	shower._parseJson = function(json) {
 		if(json) {
+			//Setup marked (https://github.com/chjj/marked)
+			marked.setOptions({
+				gfm: true,
+				tables: true,
+				breaks: true,
+				pedantic: false,
+				sanitize: true,
+				smartLists: true,
+				langPrefix: 'language-',
+				highlight: function(code, lang) {
+					if (lang === 'js') {
+						return highlighter.javascript(code);
+					}
+					return code;
+				}
+			});
+
 			//Make sure the required elements exist
 			if(!body) {
-				body = document.createElement("BODY");
+				body = document.createElement('BODY');
 				document.documentElement.appendChild(body);
 			}
 
@@ -109,13 +126,16 @@ window.shower = window.shower || (function(window, document, undefined) {
 				it = it.previousSibling;
 
 				// Make sure to skip the script that loads this file
-				if(node.nodeName == "SCRIPT") {
+				if(node.nodeName == 'SCRIPT') {
 					var src = node.src;
-					if (src && (src.lastIndexOf("shower.js") > 0 || src.lastIndexOf("shower.min.js") > 0)) { //XXX Could probably use some regex...
+					if (src && (src.lastIndexOf('shower.js') > 0 || src.lastIndexOf('shower.min.js') > 0)) { //XXX Could probably use some regex...
+						continue;
+					}
+					else if (src && src.lastIndexOf('marked.js') > 0) { //XXX Could probably use some regex...
 						continue;
 					}
 				}
-				else if (node.hasAttributes() && node.getAttribute("dontremove") == "true") {
+				else if (node.hasAttributes() && node.getAttribute('dontremove') == 'true') {
 					continue;
 				}
 
@@ -127,15 +147,15 @@ window.shower = window.shower || (function(window, document, undefined) {
 			var addBefore = body.firstChild;
 			if(!addBefore) {
 				//Need at least one node
-				addBefore = document.createElement("A");
+				addBefore = document.createElement('A');
 				body.appendChild(addBefore);
 			}
 
 			//Next, set the title (if it exists)
-			var title = json.name || "DEFAULT: Shower Presentation";
+			var title = json.name || 'DEFAULT: Shower Presentation';
 			var list = document.head.childNodes;
 			for (var i = 0; i < list.length; i++) {
-				if(list[i].nodeName == "TITLE") {
+				if(list[i].nodeName == 'TITLE') {
 					list[i].text = title;
 					break;
 				}
@@ -147,50 +167,48 @@ window.shower = window.shower || (function(window, document, undefined) {
 			var ele2;
 			if(json.slideshow && json.slideshow.header) {
 				var header = json.slideshow.header;
-				ele = document.createElement("HEADER");
-				ele2 = document.createElement("H1");
+				ele = document.createElement('HEADER');
+				ele2 = document.createElement('H1');
 				shower._processJsonMarkdown(ele2, title);
 				ele.appendChild(ele2);
 				body.insertBefore(ele, addBefore);
 				if(header.domClass) {
-					att = document.createAttribute("class");
-					att.value = header.domClass;
-					ele.setAttributeNode(att);
+					ele.classList.add(header.domClass);
 				}
 				if(header.author || header.company) {
-					ele2 = document.createElement("P");
+					ele2 = document.createElement('P');
 					ele.appendChild(ele2);
 
 					var ele3;
 					var part;
 					//XXX Can probably replace a good chunk of this with markdown...
 					if(header.author) {
-						ele3 = document.createElement("A");
+						ele3 = document.createElement('A');
 						ele2.appendChild(ele3);
 						for(part in header.author) {
-							if(part == "name") {
+							if(part == 'name') {
 								shower._processJsonMarkdown(ele3, header.author[part]);
 							}
-							else if(part == "url") {
-								att = document.createAttribute("href");
+							else if(part == 'url') {
+								att = document.createAttribute('href');
 								att.value = header.author[part];
 								ele3.setAttributeNode(att);
 							}
 						}
 					}
 					if(header.author && header.company) {
-						var txt = document.createTextNode(", ");
+						var txt = document.createTextNode(', ');
 						ele2.appendChild(txt);
 					}
 					if(header.company) {
-						ele3 = document.createElement("A");
+						ele3 = document.createElement('A');
 						ele2.appendChild(ele3);
 						for(part in header.company) {
-							if(part == "name") {
+							if(part == 'name') {
 								shower._processJsonMarkdown(ele3, header.company[part]);
 							}
-							else if(part == "url") {
-								att = document.createAttribute("href");
+							else if(part == 'url') {
+								att = document.createAttribute('href');
 								att.value = header.company[part];
 								ele3.setAttributeNode(att);
 							}
@@ -203,28 +221,26 @@ window.shower = window.shower || (function(window, document, undefined) {
 			if(json.slides) {
 				for(var slideIndex in json.slides) {
 					var slide = json.slides[slideIndex];
-					if(slide.type == "main" || slide.type == "text" || slide.type == "title" || slide.type == "innav") {
+					if(slide.type == 'main' || slide.type == 'text' || slide.type == 'title' || slide.type == 'innav') {
 						var d = shower._parseJsonToSlide(slide);
 						if(d) {
 							body.insertBefore(d, addBefore);
 						}
 					}
 					else if(window.console) {
-						window.console.log("Unknown slide type: " + slide.type);
+						window.console.log('Unknown slide type: ' + slide.type);
 					}
 				}
 			}
 
 			//Last, we need progress
 			if(json.slideshow && json.slideshow.progressBar) {
-				ele = document.createElement("DIV");
-				ele2 = document.createElement("DIV");
+				ele = document.createElement('DIV');
+				ele2 = document.createElement('DIV');
 				ele.appendChild(ele2);
 				body.insertBefore(ele, addBefore);
 
-				att = document.createAttribute("class");
-				att.value = json.slideshow.progressBarClass || "progress";
-				ele.setAttributeNode(att);
+				ele.classList.add(json.slideshow.progressBarClass || 'progress');
 			}
 		}
 		return shower;
@@ -241,88 +257,152 @@ window.shower = window.shower || (function(window, document, undefined) {
 		if(slideJson && slideJson.type) {
 			var att;
 			var txt;
-			var ele = document.createElement("SECTION");
-			var ele2 = document.createElement("DIV");
+			var ele = document.createElement('SECTION');
+			var ele2 = document.createElement('DIV');
 			retSlide = ele;
 			ele.appendChild(ele2);
 
-			att = document.createAttribute("class");
-			att.value = "slide";
+			ele.classList.add('slide');
 			if(slideJson.domClass) {
 				//If a custom class exists, use it instead of basing it off type
-				att.value += " ";
-				att.value += slideJson.domClass;
+				ele.classList.add(slideJson.domClass);
 			}
-			else if(slideJson.type == "main" || slideJson.background) { //Background seems to be the decision maker for if a slide is "cover"
-				att.value += " cover";
+			else if(slideJson.type == 'main' || slideJson.background) { //Background seems to be the decision maker for if a slide is 'cover'
+				ele.classList.add('cover');
 			}
-			else if(slideJson.type == "title") {
-				att.value += " shout";
+			else if(slideJson.type == 'title') {
+				ele.classList.add('shout');
 			}
-			ele.setAttributeNode(att);
 
 			if(slideJson.id) {
-				att = document.createAttribute("id");
+				att = document.createAttribute('id');
 				att.value = slideJson.id;
 				ele.setAttributeNode(att);
 			}
 
 			if(slideJson.timer) {
-				att = document.createAttribute("data-timing");
+				att = document.createAttribute('data-timing');
 				var time = Number(slideJson.timer).valueOf();
-				var timeStr = "";
+				var timeStr = '';
 				if((time / 60) < 10) {
-					timeStr += "0";
+					timeStr += '0';
 				}
-				timeStr += (time / 60).toFixed() + ":";
+				timeStr += (time / 60).toFixed() + ':';
 				if((time % 60) < 10) {
-					timeStr += "0";
+					timeStr += '0';
 				}
 				att.value = timeStr + (time % 60).toFixed();
 				ele.setAttributeNode(att);
 			}
 
 			ele = ele2;
-			ele2 = document.createElement("H2");
-			shower._processJsonMarkdown(ele2, slideJson.title || "");
+			ele2 = document.createElement('H2');
+			shower._processJsonMarkdown(ele2, slideJson.title || '');
 			ele.appendChild(ele2);
 
 			if(slideJson.background) {
-				ele2 = document.createElement("IMG");
+				ele2 = document.createElement('IMG');
 				ele.appendChild(ele2);
 
-				att = document.createAttribute("src");
+				att = document.createAttribute('src');
 				att.value = slideJson.background;
 				ele2.setAttributeNode(att);
 
-				att = document.createAttribute("alt");
-				att.value = slideJson.backgroundAlt || "";
+				att = document.createAttribute('alt');
+				att.value = slideJson.backgroundAlt || '';
 				ele2.setAttributeNode(att);
 			}
 
 			if(slideJson.content) {
-				//TODO
+				shower._processJsonContent(ele, slideJson.content, slideJson.type);
 			}
 
 			if(slideJson.footnote) {
-				ele2 = document.createElement("P");
+				ele2 = document.createElement('P');
 				ele.appendChild(ele2);
 
-				att = document.createAttribute("class");
-				att.value = "note";
-				ele2.setAttributeNode(att);
+				ele2.classList.add('note');
 
 				shower._processJsonMarkdown(ele2, slideJson.footnote);
 			}
 
 			if(slideJson.footer) {
-				ele2 = document.createElement("FOOTER");
+				ele2 = document.createElement('FOOTER');
 				txt = document.createTextNode(slideJson.footer);
 				ele2.appendChild(txt);
 				ele.appendChild(ele2);
 			}
 		}
 		return retSlide;
+	};
+
+	/**
+	 * Process a slide's JSON content
+	 * @param {Node} parent
+	 * @param {JSON Array} content
+	 * @param {String} slideType
+	 * @param {String} textElementType
+	 * @private
+	 * @returns {Node}
+	 */
+	shower._processJsonContent = function(parent, content, slideType, textElementType) {
+		if(textElementType == undefined || textElementType == null) {
+			textElementType = 'P';
+		}
+		for(var i = 0; i < content.length; i++) {
+			var ele = null;
+			if (typeof(content[i]) === 'object') {
+				var obj = content[i];
+				for(var n in obj) {
+					if(n == 'bullets' || n == 'numlist') {
+						if(n == 'bullets') {
+							ele = document.createElement('UL');
+						}
+						else {
+							ele = document.createElement('OL');
+						}
+						shower._processJsonContent(ele, obj[n], slideType, 'LI');
+					}
+					else if(n == 'citation') {
+						var cit = obj[n];
+						ele = document.createElement('FIGURE');
+						var ele2;
+						if(cit['quote']) {
+							ele2 = document.createElement('BLOCKQUOTE');
+							ele.appendChild(ele2);
+							ele2.appendChild(shower._processJsonMarkdown(document.createElement('P'), cit['quote']));
+						}
+						if(cit['author']) {
+							ele.appendChild(shower._processJsonMarkdown(document.createElement('FIGCAPTION'), cit['author']));
+						}
+					}
+					else if(n == 'code') {
+						ele = document.createElement('PRE');
+						parent.appendChild(ele);
+						shower._processJsonContent(ele, obj[n], slideType, 'CODE');
+					}
+					else if(n == 'codeline') {
+						//TODO
+					}
+				}
+			}
+			else {
+				//Simple process text
+				ele = shower._processJsonMarkdown(document.createElement(textElementType), String(content[i]));
+			}
+			if(ele != null) {
+				switch(slideType) {
+					case 'innav':
+						if(i > 0) {
+							//Make as a 'next' item for inner navigation
+							ele.classList.add('next');
+						}
+						break;
+				}
+				parent.appendChild(ele);
+			}
+		}
+		return parent;
 	};
 
 	/**
@@ -333,16 +413,23 @@ window.shower = window.shower || (function(window, document, undefined) {
 	 * @returns {Node} the same outer element that was passed in, or if the param was null, a <a> node
 	 */
 	shower._processJsonMarkdown = function(outerElement, text) {
+		var mark = marked(text);
 		var ret;
 		if(!outerElement || outerElement.nodeType > 1) { //Null or not something we can add children to
-			ret = document.createElement("A");
+			ret = document.createElement('A');
 		}
 		else { //A Node or Element
 			ret = outerElement;
 		}
-		//TODO
-		var t = document.createTextNode(text);
-		ret.appendChild(t);
+		if(mark.lastIndexOf('\n') == mark.length - 1) {
+			//Remove the newline
+			mark = mark.substr(0, mark.length - 1);
+		}
+		if(mark.length >= 7) {
+			//Remove the <p>...</p>
+			mark = mark.substr(3, mark.length - 7);
+		}
+		ret.innerHTML = mark;
 		return ret;
 	};
 

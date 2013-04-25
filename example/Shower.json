@@ -85,13 +85,39 @@
             "content": [
                 {
                     "code": [
-                        "<html lang='en'>",
-                        "<head> /*<!--Comment-->*/",
-                        "<title>Shower</title>",
-                        "<meta charset='UTF-8'>",
-                        "<link rel='stylesheet' href='s/screen.css'>",
-                        "<script src='j/jquery.js'></script>",
-                        "</head>"
+                        "<html lang=\"en\">",
+                        {
+                            "codeline": [
+                                {
+                                    "marked": "<head>"
+                                },
+                                " ",
+                                {
+                                    "marked": "<!--Comment-->",
+                                    "codeclass": "comment"
+                                }
+                            ]
+                        },
+                        "    <title>Shower</title>",
+                        {
+                            "codeline": [
+                                "    <meta charset=\"",
+                                {
+                                    "marked": "UTF-8",
+                                    "codeclass": "important"
+                                },
+                                "\">"
+                            ]
+                        },
+                        "    <link rel=\"stylesheet\" href=\"s/screen.css\">",
+                        "    <script src=\"j/jquery.js\"></script>",
+                        {
+                            "codeline": [
+                                {
+                                    "marked": "</head>"
+                                }
+                            ]
+                        }
                     ]
                 }
             ]
@@ -102,13 +128,31 @@
             "content": [
                 {
                     "code": [
-                        "<html lang='en'>"
+                        {
+                            "codeline": [
+                                {
+                                    "marked": "<html"
+                                },
+                                "lang=\"en\">"
+                            ]
+                        }
                     ]
                 },
                 "Now you can add a note for each block",
                 {
                     "code": [
-                        "<meta charset='UTF-8'>"
+                        {
+                            "codeline": [
+                                {
+                                    "marked": "<meta"
+                                },
+                                " charset=\"",
+                                {
+                                    "marked": "UTF-8"
+                                },
+                                "\">"
+                            ]
+                        }
                     ]
                 },
                 "And explain what is interesting about it"
