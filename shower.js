@@ -407,8 +407,8 @@ window.shower = window.shower || (function(window, document, undefined) {
 						}
 					}
 					else if(n == 'footnote') {
-						ele2 = shower._processJsonMarkdown(document.createElement('P'), String(obj[n]));
-						ele2.classList.add('note');
+						ele = shower._processJsonMarkdown(document.createElement('P'), String(obj[n]));
+						ele.classList.add('note');
 					}
 				}
 			}
@@ -439,35 +439,25 @@ window.shower = window.shower || (function(window, document, undefined) {
 	 * @returns {Node} the same outer element that was passed in, or if the param was null, a <a> node
 	 */
 	shower._processJsonMarkdown = function(outerElement, text) {
-		var hasCodeSpaces = text.indexOf('    ') >= 0;
-		if(hasCodeSpaces) {
-			//A terrible hack, but a working one
-			while(text.indexOf('    ') >= 0) {
-				text = text.replace('    ', 'SHR_FAKE4_SPACE');
+		//Replaces the first/last of every line's sapce/tab with a filler to prevent markdown from making it into code (we have an explict tag for it)
+		var handleFakeSpaces = false;
+		if(text.length > 0) {
+			if(text[0] == ' ') {
+				text = text.replace(' ', 'SHR_FAKE_SPACE');
+				handleFakeSpaces = true;
+			} else if(text[0] == '\t') {
+				text = text.replace('\t', 'SHR_FAKE_TAB');
+				handleFakeSpaces = true;
+			}
+
+			if(text[text.length - 1] == ' ') {
+				text = text.substr(0, text.length - 2) + 'SHR_FAKE_SPACE';
+				handleFakeSpaces = true;
+			} else if(text[text.length - 1] == '\t') {
+				text = text.substr(0, text.length - 2) + 'SHR_FAKE_TAB';
+				handleFakeSpaces = true;
 			}
 		}
-		/*var startSpaces = text.indexOf(' ') == 0;
-		var endSpaces = text.indexOf(' ') == text.length - 1;
-		if(startSpaces) {
-			//An even more terrible hack, but a working one
-			var c = 0;
-			while(text[c++] == ' ');
-			var rs = '';
-			for(var i = 0; i < c; i++) {
-				rs += 'SHR_FAKE1_SPACE';
-			}
-			text = rs + text.substr(c);
-		}
-		if(endSpaces) {
-			//An even more terrible hack, but a working one
-			var c = 0;
-			while(text[text.length - ((c++) + 1)] == ' ');
-			var rs = '';
-			for(var i = 0; i < c; i++) {
-				rs += 'SHR_FAKE1_SPACE';
-			}
-			text = text.substr(0, text.length - (c + 1)) + rs;
-		}*/
 		var mark = marked(text);
 		var ret;
 		if(!outerElement || outerElement.nodeType > 1) { //Null or not something we can add children to
@@ -476,22 +466,28 @@ window.shower = window.shower || (function(window, document, undefined) {
 		else { //A Node or Element
 			ret = outerElement;
 		}
-		/*if(startSpaces || endSpaces) {
-			while(mark.indexOf('SHR_FAKE1_SPACE') >= 0) {
-				mark = mark.replace('SHR_FAKE1_SPACE', ' ');
-			}
-		}*/
-		if(hasCodeSpaces) {
-			while(mark.indexOf('SHR_FAKE4_SPACE') >= 0) {
-				mark = mark.replace('SHR_FAKE4_SPACE', '    ');
-			}
-		}
+
 		if(mark.indexOf('<') >= 0 || mark.indexOf('>') >= 0) {
 			//This takes some memory but allows us to easily strip newlines and outer elements
 			var t = document.createElement('P');
 			t.innerHTML = mark;
 			mark = t.firstChild.innerHTML;
 		}
+		if(handleFakeSpaces) {
+			//Replace fake spaces and tabs with real thing
+			while(mark.indexOf('SHR_FAKE_SPACE') >= 0) {
+				mark = mark.replace('SHR_FAKE_SPACE', ' ');
+			}
+			while(mark.indexOf('SHR_FAKE_TAB') >= 0) {
+				mark = mark.replace('SHR_FAKE_TAB', '\t');
+			}
+		}
+
+		//Manually handle line breaks
+		while(mark.indexOf('&gt;&gt;') >= 0) {
+			mark = mark.replace('&gt;&gt;', '<br />');
+		}
+
 		ret.innerHTML = mark;
 		return ret;
 	};
