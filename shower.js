@@ -317,15 +317,6 @@ window.shower = window.shower || (function(window, document, undefined) {
 				shower._processJsonContent(ele, slideJson.content, slideJson.type);
 			}
 
-			if(slideJson.footnote) {
-				ele2 = document.createElement('P');
-				ele.appendChild(ele2);
-
-				ele2.classList.add('note');
-
-				shower._processJsonMarkdown(ele2, slideJson.footnote);
-			}
-
 			if(slideJson.footer) {
 				ele2 = document.createElement('FOOTER');
 				txt = document.createTextNode(slideJson.footer);
@@ -354,7 +345,9 @@ window.shower = window.shower || (function(window, document, undefined) {
 			if (typeof(content[i]) === 'object') {
 				var obj = content[i];
 				for(var n in obj) {
+
 					if(n == 'bullets' || n == 'numlist') {
+						//Lists
 						if(n == 'bullets') {
 							ele = document.createElement('UL');
 						}
@@ -364,9 +357,11 @@ window.shower = window.shower || (function(window, document, undefined) {
 						shower._processJsonContent(ele, obj[n], slideType, 'LI');
 					}
 					else if(n == 'citation') {
+						//Citation
 						var cit = obj[n];
 						ele = document.createElement('FIGURE');
 						var ele2;
+
 						if(cit['quote']) {
 							ele2 = document.createElement('BLOCKQUOTE');
 							ele.appendChild(ele2);
@@ -377,12 +372,43 @@ window.shower = window.shower || (function(window, document, undefined) {
 						}
 					}
 					else if(n == 'code') {
+						//Code
 						ele = document.createElement('PRE');
 						parent.appendChild(ele);
 						shower._processJsonContent(ele, obj[n], slideType, 'CODE');
 					}
 					else if(n == 'codeline') {
-						//TODO
+						//A formatted line of code
+						ele = document.createElement(textElementType);
+						parent.appendChild(ele);
+						var cl = obj[n];
+						var ele2 = null;
+						for(var k = 0; k < cl.length; k++) {
+							if (typeof(cl[k]) === 'object') {
+								var clObj = cl[k];
+
+								if(clObj['marked']) {
+									ele2 = shower._processJsonMarkdown(document.createElement('MARK'), String(clObj['marked']));
+									if(clObj['codeclass']) {
+										ele2.classList.add(clObj['codeclass']);
+									}
+								}
+							}
+							else {
+								ele2 = shower._processJsonMarkdown(document.createElement('P'), String(cl[k]));
+								if(ele2.innerHTML.indexOf('<') == -1 && ele2.innerHTML.indexOf('>') == -1) {
+									//No "formatting", just make a text node
+									ele2 = document.createTextNode(String(cl[k]));
+								}
+							}
+							if(ele != null) {
+								ele.appendChild(ele2);
+							}
+						}
+					}
+					else if(n == 'footnote') {
+						ele2 = shower._processJsonMarkdown(document.createElement('P'), String(obj[n]));
+						ele2.classList.add('note');
 					}
 				}
 			}
@@ -413,6 +439,35 @@ window.shower = window.shower || (function(window, document, undefined) {
 	 * @returns {Node} the same outer element that was passed in, or if the param was null, a <a> node
 	 */
 	shower._processJsonMarkdown = function(outerElement, text) {
+		var hasCodeSpaces = text.indexOf('    ') >= 0;
+		if(hasCodeSpaces) {
+			//A terrible hack, but a working one
+			while(text.indexOf('    ') >= 0) {
+				text = text.replace('    ', 'SHR_FAKE4_SPACE');
+			}
+		}
+		/*var startSpaces = text.indexOf(' ') == 0;
+		var endSpaces = text.indexOf(' ') == text.length - 1;
+		if(startSpaces) {
+			//An even more terrible hack, but a working one
+			var c = 0;
+			while(text[c++] == ' ');
+			var rs = '';
+			for(var i = 0; i < c; i++) {
+				rs += 'SHR_FAKE1_SPACE';
+			}
+			text = rs + text.substr(c);
+		}
+		if(endSpaces) {
+			//An even more terrible hack, but a working one
+			var c = 0;
+			while(text[text.length - ((c++) + 1)] == ' ');
+			var rs = '';
+			for(var i = 0; i < c; i++) {
+				rs += 'SHR_FAKE1_SPACE';
+			}
+			text = text.substr(0, text.length - (c + 1)) + rs;
+		}*/
 		var mark = marked(text);
 		var ret;
 		if(!outerElement || outerElement.nodeType > 1) { //Null or not something we can add children to
@@ -421,13 +476,21 @@ window.shower = window.shower || (function(window, document, undefined) {
 		else { //A Node or Element
 			ret = outerElement;
 		}
-		if(mark.lastIndexOf('\n') == mark.length - 1) {
-			//Remove the newline
-			mark = mark.substr(0, mark.length - 1);
+		/*if(startSpaces || endSpaces) {
+			while(mark.indexOf('SHR_FAKE1_SPACE') >= 0) {
+				mark = mark.replace('SHR_FAKE1_SPACE', ' ');
+			}
+		}*/
+		if(hasCodeSpaces) {
+			while(mark.indexOf('SHR_FAKE4_SPACE') >= 0) {
+				mark = mark.replace('SHR_FAKE4_SPACE', '    ');
+			}
 		}
-		if(mark.length >= 7) {
-			//Remove the <p>...</p>
-			mark = mark.substr(3, mark.length - 7);
+		if(mark.indexOf('<') >= 0 || mark.indexOf('>') >= 0) {
+			//This takes some memory but allows us to easily strip newlines and outer elements
+			var t = document.createElement('P');
+			t.innerHTML = mark;
+			mark = t.firstChild.innerHTML;
 		}
 		ret.innerHTML = mark;
 		return ret;

@@ -26,7 +26,7 @@
             "timer": 5,
             "title": "Slide with timer",
             "content": [
-                "It will change right in 5 seconds"
+                "It will change right in five seconds"
             ],
             "footer": "Presenter note for the first slide"
         },
@@ -34,7 +34,7 @@
             "type": "text",
             "title": "Heading",
             "content": [
-                "In your slides text you can use [links](http://google.com) and various inline elements for _emotional_ and __strong__ emphasis or just for *italic* or **bold decoration**. `<code>` is used for inline code samples."
+                "In your slides text you can use [links](http://google.com) and various inline elements for _emotional_ and __strong__ emphasis or just for *italic* or **bold** decoration. `<code>` is used for inline code samples."
             ],
             "footer": "Presenter note for the second slide"
         },
@@ -42,9 +42,11 @@
             "type": "text",
             "title": "Two rows.>> Mighty heading",
             "content": [
-                "You can use two lines header but it would reduce space on a slide. The 'Ribbon' theme is designed for seven lines of code after one-line header by default."
-            ],
-            "footnote": "This paragraph could be used as a footnote"
+                "You can use two lines header but it would reduce space on a slide. The 'Ribbon' theme is designed for seven lines of code after one-line header by default.",
+                {
+                    "footnote": "This paragraph could be used as a footnote"
+                }
+            ]
         },
         {
             "type": "text",
@@ -138,7 +140,9 @@
                         }
                     ]
                 },
-                "Now you can add a note for each block",
+                {
+                    "footnote": "Now you can add a note for each block"
+                },
                 {
                     "code": [
                         {
@@ -155,7 +159,9 @@
                         }
                     ]
                 },
-                "And explain what is interesting about it"
+                {
+                    "footnote": "And explain what is interesting about it"
+                }
             ]
         },
         {
