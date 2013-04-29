@@ -4,9 +4,9 @@
 	<title>Shower Presentation Engine</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=792, user-scalable=no">
-	<meta name="showerJsonSource" content="https://raw.github.com/GeneralZero/shower/master/example/Shower.json">
-	<link rel="stylesheet" href="../shower/themes/ribbon/styles/screen.css">
-	<link rel="stylesheet" href="../shower/themes/ribbon/styles/print.css" media="print">
+	<meta name="showerJsonSource" content="http://personal.stevens.edu/~vsimonet/json/Presentation.json">
+	<link rel="stylesheet" href="http://personal.stevens.edu/~vsimonet/shower/themes/ribbon/styles/screen.css">
+	<link rel="stylesheet" href="http://personal.stevens.edu/~vsimonet/shower/themes/ribbon/styles/print.css" media="print">
 	<!--
 		To apply styles to the certain slides
 		set slide ID to get needed elements
@@ -22,8 +22,69 @@
 			color:#FFF;
 			}
 	</style>
+	<script>
+		function swapTheme()
+		{
+			var supportedThemes = ["ribbon", "bright"];
+
+			//Get links
+			var themeLinks = document.head.firstChild;
+			var theme = null;
+			var themePrint = null;
+			while(themeLinks)
+			{
+				if(themePrint && theme)
+					break;
+				if(themeLinks.nodeName != "LINK" || themeLinks.rel != "stylesheet" || themeLinks.href.indexOf("shower/themes") == -1)
+				{
+					themeLinks = themeLinks.nextSibling;
+					continue;
+				}
+				if(themeLinks.media)
+				{
+					themePrint = themeLinks;
+				}
+				else
+				{
+					theme = themeLinks;
+				}
+				themeLinks = themeLinks.nextSibling;
+			}
+			if(!theme)
+				return;
+
+			//Get theme and swap it
+			for(var i = 0; i < supportedThemes.length; i++)
+			{
+				if(theme.href.indexOf(supportedThemes[i]) >= 0)
+				{
+					//Found it
+
+					//Get the next theme
+					var org = i;
+					if((i + 1) == supportedThemes.length)
+					{
+						i = 0;
+					}
+					else
+					{
+						i++;
+					}
+
+					//Swap themes
+					theme.href = theme.href.replace(supportedThemes[org], supportedThemes[i]);
+					if(themePrint)
+					{
+						themePrint.href = themePrint.href.replace(supportedThemes[org], supportedThemes[i]);
+					}
+					break;
+				}
+			}
+		}
+	</script>
 </head>
 <body class="list">
+	<button dontremove="true" onclick="swapTheme()">Swap Themes</button>
 	<header class="caption">
 		<h1>Shower Presentation Engine</h1>
 		<p><a href="http://pepelsbey.net/">Vadim Makeev</a>, <a href="http://opera.com">Opera Software</a></p>
@@ -132,9 +193,9 @@
 		-->
 	<div class="progress"><div></div></div>
 	<!-- <script src="https://raw.github.com/chjj/marked/master/lib/marked.js"></script> -->
-	<script src="../shower/marked.js"></script>
+	<script src="http://personal.stevens.edu/~vsimonet/shower/marked.js"></script>
 	<!-- <script src="../shower/shower.min.js"></script> -->
-	<script src="../shower/shower.js"></script>
+	<script src="http://personal.stevens.edu/~vsimonet/shower/shower.js"></script>
 	<!-- Copyright © 2010–2013 Vadim Makeev — pepelsbey.net -->
 	<!-- Photos by John Carey — fiftyfootshadows.net -->
 </body>

@@ -4,12 +4,8 @@
         "header": {
             "domClass": "caption",
             "author": {
-                "name": "Vadim Makeev",
-                "url": "http://pepelsbey.net/"
-            },
-            "company": {
-                "name": "Opera Software",
-                "url": "http://opera.com/"
+                "name": "Vinnie Simonetti, Brian Riding, Ryan Phillips, Kenny Goff, Brandon Gnash",
+                "url": "https://github.com/GeneralZero/shower"
             }
         },
         "progressBar": true
