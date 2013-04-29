@@ -1098,6 +1098,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 				}
 			break;
 
+			case 8:  // Backspace
 			case 33: // PgUp
 			case 38: // Up
 			case 37: // Left

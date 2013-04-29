@@ -173,36 +173,6 @@
             "id": "Picture",
             "title": "And place any picture",
             "background": "pictures/picture.jpg"
-        },
-        {
-            "type": "innav",
-            "title": "Inner Navagation",
-            "content": [
-                {
-                    "numlist": [
-                        "Lets you change objects one by one",
-                        "For example, show list items",
-                        "Or switch pictures",
-                        "And much more",
-                        "But it will work only once"
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "text",
-            "title": "Shower Presentation Engine",
-            "content": [
-                "Vadim Makeev, Opera Software",
-                {
-                    "bullets": [
-                        "[pepelsbey.net](http://pepelsbey.net)",
-                        "[twitter.com/pepelsbey](http://twitter.com/pepelsbey)",
-                        "[pepelsbey@gmail.com](mailto:pepelsbey@gmail.com)"
-                    ]
-                },
-                "Shower: [github.com/shower/shower](https://github.com/shower/shower)"
-            ]
         }
     ]
 }
