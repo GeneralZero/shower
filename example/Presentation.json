@@ -167,7 +167,6 @@
         {
             "type": "title",
             "title": "Now with image Support!",
-            "background": "pictures/picture.jpg"
         },
         {
             "type": "text",
