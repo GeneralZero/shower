@@ -166,15 +166,13 @@
         },
         {
             "type": "title",
-            "title": "You can shout>> this way"
+            "title": "Now with image Support!",
+            "background": "pictures/picture.jpg"
         },
         {
             "type": "text",
             "id": "Picture",
             "title": "And place any picture",
-            "content": [
-                "Text"
-            ],
             "background": "pictures/picture.jpg"
         },
         {
