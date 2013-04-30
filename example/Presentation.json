@@ -4,7 +4,7 @@
         "header": {
             "domClass": "caption",
             "author": {
-                "name": "Vinnie Simonetti, Brian Riding, Ryan Phillips, Kenny Goff, Brandon Gnash",
+                "name": "Vinnie Simonetti, Brian Riding, Ryan Phillips, Kenny Goff, and Brandon Gnash",
                 "url": "https://github.com/GeneralZero/shower"
             }
         },
@@ -19,156 +19,138 @@
         },
         {
             "type": "text",
-            "timer": 5,
-            "title": "Slide with timer",
-            "content": [
-                "It will change right in five seconds"
-            ],
-            "footer": "Presenter note for the first slide"
-        },
-        {
-            "type": "text",
-            "title": "Heading",
-            "content": [
-                "In your slides text you can use [links](http://google.com) and various inline elements for _emotional_ and __strong__ emphasis or just for *italic* or **bold** decoration. `<code>` is used for inline code samples."
-            ],
-            "footer": "Presenter note for the second slide"
-        },
-        {
-            "type": "text",
-            "title": "Two rows.>> Mighty heading",
-            "content": [
-                "You can use two lines header but it would reduce space on a slide. The 'Ribbon' theme is designed for seven lines of code after one-line header by default.",
-                {
-                    "footnote": "This paragraph could be used as a footnote"
-                }
-            ]
-        },
-        {
-            "type": "text",
-            "title": "Various lists",
+            "title": "What we ~<del~>wanted to do~</del~> did",
             "content": [
                 {
                     "bullets": [
-                        "Simple lists are marked with bullets.",
-                        "Ordered lists begin with a number.",
-                        "You can even nest lists one inside another.",
+                        "JSON support",
+                        "Bug fixes",
+                        "Ability to switch themes",
+                        "Mobile*"
+                    ]
+                },
+                {
+                    "footnote": "* Mobile is iffy on some browsers."
+                }
+            ]
+        },
+        {
+            "type": "text",
+            "title": "Shower is pretty well featured...",
+            "content": [
+                "Text",
+                {
+                    "bullets": [
+                        "Lists",
+                        "Lists of stuff",
                         {
                             "numlist": [
-                                "Or mix their types.",
-                                "But do not go too far.",
-                                "Otherwise audience will be board."
+                                "Such as lists of lists",
+                                "[Links](http://google.com) _and_ **formatters**"
                             ]
                         },
-                        "Look, seven rows exactly!"
+                        "And HTML formatting support..."
                     ]
                 }
             ]
         },
         {
             "type": "text",
-            "title": "Serious Citation",
+            "title": "Embed HTML",
             "content": [
-                {
-                    "citation": {
-                        "quote": "You can wrap one or more paragraphs into citation, which will make text italic and add a nice quote on the left. Giving the citation source would make it even more serious.",
-                        "author": "Vadim Makeev"
-                    }
-                }
+                "~<iframe width=\"560\" height=\"315\" src=\"http://www.youtube.com/embed/6A5EpqqDOdk\" frameborder=\"0\" allowfullscreen~>~</iframe~>"
             ]
         },
         {
             "type": "text",
-            "title": "When you have a lot of code",
+            "timer": 5,
+            "title": "Then, Timers!",
             "content": [
-                {
-                    "code": [
-                        "<html lang=\"en\">",
-                        {
-                            "codeline": [
-                                {
-                                    "marked": "<head>"
-                                },
-                                " ",
-                                {
-                                    "marked": "<!--Comment-->",
-                                    "codeclass": "comment"
-                                }
-                            ]
-                        },
-                        "    <title>Shower</title>",
-                        {
-                            "codeline": [
-                                "    <meta charset=\"",
-                                {
-                                    "marked": "UTF-8",
-                                    "codeclass": "important"
-                                },
-                                "\">"
-                            ]
-                        },
-                        "    <link rel=\"stylesheet\" href=\"s/screen.css\">",
-                        "    <script src=\"j/jquery.js\"></script>",
-                        {
-                            "codeline": [
-                                {
-                                    "marked": "</head>"
-                                }
-                            ]
-                        }
-                    ]
-                }
+                "Count to 5"
             ]
         },
         {
+            "type": "title",
+            "id": "Cover",
+            "title": "And images!",
+            "background": "pictures/picture.jpg"
+        },
+        {
+            "type": "title",
+            "title": "JSON>>Support"
+        },
+        {
             "type": "text",
-            "title": "Code in separate blocks",
+            "title": "How to use JSON with Shower",
             "content": [
+                "Add this line:",
                 {
                     "code": [
                         {
                             "codeline": [
+                                "<",
                                 {
-                                    "marked": "<html"
+                                    "marked": "meta"
                                 },
-                                " lang=\"en\">"
+                                " name=\"showerJsonSource\""
                             ]
-                        }
+                        },
+                        "      content=\"../json/Presentation.json\">"
                     ]
-                },
-                {
-                    "footnote": "Now you can add a note for each block"
-                },
-                {
-                    "code": [
-                        {
-                            "codeline": [
-                                {
-                                    "marked": "<meta"
-                                },
-                                " charset=\"",
-                                {
-                                    "marked": "UTF-8"
-                                },
-                                "\">"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "footnote": "And explain what is interesting about it"
                 }
             ]
         },
         {
             "type": "title",
-            "title": "Now with image Support!"
+            "title": "And you're done (with JSON)"
         },
         {
             "type": "text",
-            "id": "Picture",
-            "title": "And place any picture",
-            "background": "pictures/picture.jpg"
+            "title": "Bug fixes",
+            "content": [
+                "Besides some general functionality, the",
+                "main bug fix we did was supporting backspace"
+            ]
+        },
+        {
+            "type": "text",
+            "title": "Theme switching",
+            "content": [
+                "Swap between themes",
+                {
+                    "footnote": "We only have 2 themes, both of which come with Shower."
+                }
+            ]
+        },
+        {
+            "type": "text",
+            "title": "Mobile phones",
+            "content": [
+                {
+                    "bullets": [
+                        "Works",
+                        {
+                            "bullets": [
+                                "Chrome",
+                                "(newer) BlackBerry",
+                                "Safari",
+                                "Opera"
+                            ]
+                        },
+                        "Doesn't work",
+                        {
+                            "bullets": [
+                                "Android Browser",
+                                "(older) BlackBerry"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "title",
+            "title": "END"
         }
     ]
 }

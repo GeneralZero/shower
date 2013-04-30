@@ -439,7 +439,10 @@ window.shower = window.shower || (function(window, document, undefined) {
 	 * @returns {Node} the same outer element that was passed in, or if the param was null, a <a> node
 	 */
 	shower._processJsonMarkdown = function(outerElement, text) {
-		//Replaces the first/last of every line's sapce/tab with a filler to prevent markdown from making it into code (we have an explict tag for it)
+		//Escape HTML stuff
+		var handleFakeEscape = text.indexOf('~<') >= 0 || text.indexOf('~>') >= 0;
+
+		//Replaces the first/last of every line's space/tab with a filler to prevent markdown from making it into code (we have an explict tag for it)
 		var handleFakeSpaces = false;
 		if(text.length > 0) {
 			if(text[0] == ' ') {
@@ -480,6 +483,14 @@ window.shower = window.shower || (function(window, document, undefined) {
 			}
 			while(mark.indexOf('SHR_FAKE_TAB') >= 0) {
 				mark = mark.replace('SHR_FAKE_TAB', '\t');
+			}
+		}
+		if(handleFakeEscape) {
+			while(mark.indexOf('~&lt;') >= 0) {
+				mark = mark.replace('~&lt;', '<');
+			}
+			while(mark.indexOf('~&gt;') >= 0) {
+				mark = mark.replace('~&gt;', '>');
 			}
 		}
 
