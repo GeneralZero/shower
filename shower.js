@@ -740,6 +740,7 @@ window.shower = window.shower || (function(window, document, undefined) {
 	* @returns {Boolean}
 	*/
 	shower.enterSlideMode = function(callback) {
+		var isInSlideMode = shower.isSlideMode();
 		var currentSlideNumber = shower.getCurrentSlideNumber();
 
 		// Anyway: change body class (@TODO: refactoring)
@@ -752,6 +753,11 @@ window.shower = window.shower || (function(window, document, undefined) {
 		}
 
 		shower._applyTransform(shower._getTransform());
+
+		if(!isInSlideMode) {
+			//If a timed slide is clicked, the timer doesn't run
+			shower.runInnerNavigation(currentSlideNumber);
+		}
 
 		if (typeof(callback) === 'function') {
 			callback();

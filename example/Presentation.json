@@ -19,6 +19,42 @@
         },
         {
             "type": "text",
+            "title": "Idea",
+            "content": [
+                "Cleaver but better"
+            ]
+        },
+        {
+            "type": "text",
+            "title": "Cleaver",
+            "content": [
+                "Open source from Jordan Scales",
+                "Node.js server with local JSON file",
+                "[github.com/prezjordan/cleaver](http://github.com/prezjordan/cleaver)",
+                "Example: [http://prezjordan.github.io/cleaver](http://prezjordan.github.io/cleaver/)"
+            ]
+        },
+        {
+            "type": "text",
+            "title": "Whats Wrong?",
+            "content": [
+                "Too specific for \"normal people\""
+            ]
+        },
+        {
+            "type": "title",
+            "title": "Shower was found"
+        },
+        {
+            "type": "text",
+            "title": "Whats Wrong with Shower?",
+            "content": [
+                "Still too specific for \"normal people\"",
+                "Have to know how to edit HTML to make a presentation"
+            ]
+        },
+        {
+            "type": "text",
             "title": "What we ~<del~>wanted to do~</del~> did",
             "content": [
                 {
@@ -71,7 +107,6 @@
         },
         {
             "type": "title",
-            "id": "Cover",
             "title": "And images!",
             "background": "pictures/picture.jpg"
         },
@@ -108,8 +143,13 @@
             "type": "text",
             "title": "Bug fixes",
             "content": [
-                "Besides some general functionality, the",
-                "main bug fix we did was supporting backspace"
+                {
+                    "bullets": [
+                        "General functionality",
+                        "Backspace support",
+                        "Clicking timed slide didn't work"
+                    ]
+                }
             ]
         },
         {
