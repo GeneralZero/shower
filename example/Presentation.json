@@ -107,8 +107,7 @@
         },
         {
             "type": "title",
-            "title": "And images!",
-            "background": "pictures/picture.jpg"
+            "background": "pictures/IMG_0078_small.jpg"
         },
         {
             "type": "title",
@@ -180,7 +179,7 @@
                         "Doesn't work",
                         {
                             "bullets": [
-                                "Android Browser",
+                                "Android Browser (Unless you ask Brian)",
                                 "(older) BlackBerry"
                             ]
                         }
